@@ -10,16 +10,15 @@ const rl = readline.createInterface({
 
 async function login(username, password) {
   try {
-    const response = await axios.post(`${baseURL}/login`, {
-      username: username,
-      password: password
-    });
+    const response = await axios.post(`${baseURL}/login`, { user_name: username, password: password });
+    console.log('Login successful.');
     return response.data.accessToken;
   } catch (error) {
     console.error('Login failed:', error.response ? error.response.data : error.message);
     return null;
   }
 }
+
 
 async function deleteStudent(id, token) {
   try {

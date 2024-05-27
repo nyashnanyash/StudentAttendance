@@ -17,7 +17,7 @@ function promptForCredentials(callback) {
 
 async function login(username, password) {
   try {
-    const response = await axios.post(`${baseURL}/login`, { username, password });
+    const response = await axios.post(`${baseURL}/login`, { user_name: username, password: password });
     console.log('Login successful.');
     return response.data.accessToken;
   } catch (error) {
@@ -25,6 +25,7 @@ async function login(username, password) {
     return null;
   }
 }
+
 
 async function fetchAllStudents(token) {
   try {

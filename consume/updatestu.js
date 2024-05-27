@@ -17,7 +17,7 @@ function promptForCredentials(callback) {
 
 async function login(username, password) {
   try {
-    const response = await axios.post(`${baseURL}/login`, { username, password });
+    const response = await axios.post(`${baseURL}/login`, { user_name: username, password: password });
     console.log('Login successful.');
     return response.data.accessToken;
   } catch (error) {
@@ -43,11 +43,23 @@ async function main() {
   promptForCredentials(async (username, password) => {
     const token = await login(username, password);
     if (token) {
-      const studentId = 'your-student-id'; // Replace with the student ID you want to update
-      const updatedFields = { name: 'Updated Name', reg_no: 'Updated Reg No', institution_id: 'Updated Institution ID' }; // Replace with the updated fields
-      updateStudent(token, studentId, updatedFields);
+      rl.question('Enter the student ID to update: ', (studentId) => {
+        const updatedFields = {};
+        rl.question(`Enter new name (Press Enter to keep unchanged): `, (name) => {
+          updatedFields.name = name.trim();
+          rl.question(`Enter new registration number (Press Enter to keep unchanged): `, (regNo) => {
+            updatedFields.reg_no = regNo.trim();
+            rl.question(`Enter new institution ID (Press Enter to keep unchanged): `, (institutionId) => {
+              updatedFields.institution_id = institutionId.trim();
+              updateStudent(token, studentId, updatedFields);
+              rl.close();
+            });
+          });
+        });
+      });
+    } else {
+      rl.close();
     }
-    rl.close();
   });
 }
 
